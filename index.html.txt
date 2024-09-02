@@ -1,0 +1,103 @@
+```html
+   <!DOCTYPE html>
+   <html lang="es">
+   <head>
+       <meta charset="UTF-8">
+       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+       <title>Cotizador ASPIRED PERLA NEGRA ORO</title>
+       <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+       <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+       <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+       <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+   </head>
+   <body>
+       <div id="root"></div>
+       <script type="text/babel">
+           // Aquí irá el código del componente Cotizador
+
+
+import React, { useState } from 'react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+
+const accesorios = [
+  { id: 1, nombre: "Collar", precio: 150 },
+  { id: 2, nombre: "Pulsera", precio: 100 },
+  { id: 3, nombre: "Anillo", precio: 200 },
+  { id: 4, nombre: "Aretes", precio: 120 },
+  { id: 5, nombre: "Reloj", precio: 500 },
+  { id: 6, nombre: "Lentes de sol", precio: 300 },
+  { id: 7, nombre: "Bufanda", precio: 180 },
+  { id: 8, nombre: "Sombrero", precio: 250 },
+  { id: 9, nombre: "Cinturón", precio: 220 },
+  { id: 10, nombre: "Bolso", precio: 450 },
+];
+
+const Cotizador = () => {
+  const [nombre, setNombre] = useState('');
+  const [seleccionados, setSeleccionados] = useState([]);
+
+  const handleSeleccion = (id) => {
+    const accesorio = accesorios.find(a => a.id === parseInt(id));
+    if (seleccionados.length < 10 && !seleccionados.some(s => s.id === accesorio.id)) {
+      setSeleccionados([...seleccionados, accesorio]);
+    }
+  };
+
+  const eliminarSeleccion = (id) => {
+    setSeleccionados(seleccionados.filter(s => s.id !== id));
+  };
+
+  const total = seleccionados.reduce((sum, item) => sum + item.precio, 0);
+
+  return (
+    <div className="p-4 max-w-md mx-auto">
+      <h1 className="text-2xl font-bold mb-4">Cotizador de Accesorios</h1>
+      <Input
+        type="text"
+        placeholder="Ingrese su nombre"
+        value={nombre}
+        onChange={(e) => setNombre(e.target.value)}
+        className="mb-4"
+      />
+      <Select onValueChange={handleSeleccion}>
+        <SelectTrigger>
+          <SelectValue placeholder="Seleccione un accesorio" />
+        </SelectTrigger>
+        <SelectContent>
+          {accesorios.map((accesorio) => (
+            <SelectItem key={accesorio.id} value={accesorio.id.toString()}>
+              {accesorio.nombre} - ${accesorio.precio}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+      <div className="mt-4 p-4 border rounded">
+        <h2 className="text-xl font-semibold mb-2">Cotización para: {nombre}</h2>
+        <ul>
+          {seleccionados.map((item) => (
+            <li key={item.id} className="flex justify-between items-center mb-2">
+              <span>{item.nombre} - ${item.precio}</span>
+              <Button variant="destructive" size="sm" onClick={() => eliminarSeleccion(item.id)}>
+                Eliminar
+              </Button>
+            </li>
+          ))}
+        </ul>
+        <div className="mt-4 text-right">
+          <strong>Total: ${total}</strong>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Cotizador;
+
+
+
+       </script>
+   </body>
+   </html>
+   ```
