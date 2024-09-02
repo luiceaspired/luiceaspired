@@ -14,12 +14,6 @@
        <script type="text/babel">
            // Aquí irá el código del componente Cotizador
 
-
-import React, { useState } from 'react';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-
 const accesorios = [
   { id: 1, nombre: "Collar", precio: 150 },
   { id: 2, nombre: "Pulsera", precio: 100 },
@@ -34,11 +28,12 @@ const accesorios = [
 ];
 
 const Cotizador = () => {
-  const [nombre, setNombre] = useState('');
-  const [seleccionados, setSeleccionados] = useState([]);
+  const [nombre, setNombre] = React.useState('');
+  const [seleccionados, setSeleccionados] = React.useState([]);
 
-  const handleSeleccion = (id) => {
-    const accesorio = accesorios.find(a => a.id === parseInt(id));
+  const handleSeleccion = (e) => {
+    const id = parseInt(e.target.value);
+    const accesorio = accesorios.find(a => a.id === id);
     if (seleccionados.length < 10 && !seleccionados.some(s => s.id === accesorio.id)) {
       setSeleccionados([...seleccionados, accesorio]);
     }
@@ -53,34 +48,36 @@ const Cotizador = () => {
   return (
     <div className="p-4 max-w-md mx-auto">
       <h1 className="text-2xl font-bold mb-4">Cotizador de Accesorios</h1>
-      <Input
+      <input
         type="text"
         placeholder="Ingrese su nombre"
         value={nombre}
         onChange={(e) => setNombre(e.target.value)}
-        className="mb-4"
+        className="w-full p-2 mb-4 border rounded"
       />
-      <Select onValueChange={handleSeleccion}>
-        <SelectTrigger>
-          <SelectValue placeholder="Seleccione un accesorio" />
-        </SelectTrigger>
-        <SelectContent>
-          {accesorios.map((accesorio) => (
-            <SelectItem key={accesorio.id} value={accesorio.id.toString()}>
-              {accesorio.nombre} - ${accesorio.precio}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+      <select
+        onChange={handleSeleccion}
+        className="w-full p-2 mb-4 border rounded"
+      >
+        <option value="">Seleccione un accesorio</option>
+        {accesorios.map((accesorio) => (
+          <option key={accesorio.id} value={accesorio.id}>
+            {accesorio.nombre} - ${accesorio.precio}
+          </option>
+        ))}
+      </select>
       <div className="mt-4 p-4 border rounded">
         <h2 className="text-xl font-semibold mb-2">Cotización para: {nombre}</h2>
         <ul>
           {seleccionados.map((item) => (
             <li key={item.id} className="flex justify-between items-center mb-2">
               <span>{item.nombre} - ${item.precio}</span>
-              <Button variant="destructive" size="sm" onClick={() => eliminarSeleccion(item.id)}>
+              <button 
+                onClick={() => eliminarSeleccion(item.id)}
+                className="bg-red-500 text-white px-2 py-1 rounded"
+              >
                 Eliminar
-              </Button>
+              </button>
             </li>
           ))}
         </ul>
@@ -92,9 +89,7 @@ const Cotizador = () => {
   );
 };
 
-export default Cotizador;
-
-
+ReactDOM.render(<Cotizador />, document.getElementById('root'));
 
        </script>
    </body>
